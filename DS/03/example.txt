@@ -1,0 +1,45 @@
+Process to design a method:
+
+Design a method to add one to an integer.
+
+Step 1: Stub Method
+
+static int addOne(int xx) {
+    return 0;
+}
+
+Step 2: Javadoc
+
+/**
+ * Add one to an integer.
+ * 
+ * @param  xx   The initial integer.
+ * @return      One more than that.
+ */
+
+Step 3: Examples
+
+// 4 => 5
+
+Step 4: Initial Tests
+
+assertEquals(addOne(4), 4);
+
+Step 5: Template
+
+ - List the stuff we have access to in the
+   method body.
+
+static int addOne(int xx) {
+    xx
+}
+
+Step 6: Write the function body.
+
+static int addOne(int xx) {
+    return xx + 1;
+}
+
+Step 7: Add more Tests
+
+assertEquals(addOne(4), 5);
