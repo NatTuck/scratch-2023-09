@@ -10,19 +10,26 @@ import java.util.function.Function;
  *
  * @author Nat Tuck
  */
-public class ArrayWrap<T> {
+public class ArrayList<T> {
     T[] data;
+    int length;
 
-    ArrayWrap() {
-        this.data = (T[]) new Object[0];
+    ArrayList() {
+        this.data = (T[]) new Object[1];
+        this.length = 0;
     }
 
-    ArrayWrap(int nn) {
+    ArrayList(int nn) {
         this.data = (T[]) new Object[nn];
+        this.length = 0;
     }
 
-    int length() {
+    int capacity() {
         return data.length;
+    }
+    
+    int length() {
+        return length;
     }
 
     T get(int ii) {
@@ -43,8 +50,8 @@ public class ArrayWrap<T> {
         this.data = data1;
     }
 
-    ArrayWrap<T> map(Function<T, T> op) {
-        var ys = new ArrayWrap<T>(this.data.length);
+    ArrayList<T> map(Function<T, T> op) {
+        var ys = new ArrayList<T>(this.data.length);
         for (int ii = 0; ii < this.data.length; ++ii) {
             ys.set(ii, op.apply(this.get(ii)));
         }
@@ -67,5 +74,31 @@ public class ArrayWrap<T> {
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    void append(T vv) {
+        int ii = length();
+        resize(ii + ii);
+        set(ii, vv);
+    }
+
+    // Insert vv after index ii
+    void insertAfter(int ii, T vv) {
+        if (capacity() <= length()) {
+            resize(2*length());
+        }
+        T next;
+        for (int jj = ii + 1; jj < length(); ++jj) {
+                next = data[jj + 1];
+                data[jj+1] = data[jj];
+                
+        }
+        data[ii] = vv;
+        // insertAfter(2, 9)
+        // [0, 1, 2, 3, 4]
+        // [0, 1, 2,  , 3, 4]
+        // [0, 1, 2,  , 3, 3]
+        
+        // [0, 1, 2, 9, 3, 4]
     }
 }
