@@ -14,6 +14,12 @@ class ArrayList<T> {
     T[] data;
     int length;
 
+    static <T> ArrayList<T> list(T xx) {
+        var ys = new ArrayList();
+        ys.append(xx);
+        return ys;
+    }
+
     /**
      * Create an empty ArrayList with capacity nn.
      *
@@ -31,7 +37,7 @@ class ArrayList<T> {
      * Create an empty ArrayList with the default capacity.
      */
     ArrayList() {
-        this(4);
+        this(2);
     }
 
     /**
@@ -154,7 +160,9 @@ class ArrayList<T> {
      */
     ArrayList<T> map(Function<T, T> op) {
         var ys = new ArrayList<T>();
-        for (int ii = 0; ii < this.data.length; ++ii) {
+        for (int ii = 0; ii < length(); ++ii) {
+            //System.out.println("map item " + ii);
+            //System.out.println("out of " + length());
             T b0 = get(ii);
             T b1 = op.apply(b0);
             ys.append(b1);
