@@ -3,7 +3,15 @@ package demo;
 
 public class App {
     public static void main(String[] args) {
-        ArrayWrap<Integer> xs = new ArrayWrap<Integer>(2);
+        ArrayList<Integer> xs = new ArrayList<Integer>();
+        for (int ii = 0; ii < 10; ++ii) {
+            xs.append(ii);
+        }
+        System.out.println("" + xs);
+    }
+
+    public static void main2(String[] args) {
+        ArrayList<Integer> xs = new ArrayList<Integer>(2);
         xs.set(0, 1);
         xs.set(1, 2);
 
