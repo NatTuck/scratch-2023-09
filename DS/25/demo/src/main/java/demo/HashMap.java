@@ -1,28 +1,28 @@
 package demo;
 
+import java.lang.reflect.Array;
+
 public class HashMap<K, V> {
-    ConsList<Entry<K, V>>[] data;
+    Entry<K, V>[] data;
     int size;
 
     Entry<K, V> empty;
     Entry<K, V> tomb;
 
-    @SuppressWarnings("unchecked")
     public HashMap() {
         this.empty = new Empty<K, V>();
         this.tomb = new Tomb<K, V>();
 
-        this.data = (ConsList<Entry<K, V>>[]) new Object[4];
+        this.data = newArray(4);
         this.size = 0;
         for (int ii = 0; ii < 4; ++ii) {
             this.data[ii] = empty;
         }
     }
 
-    @SuppressWarnings("unchecked")
     void grow() {
         var prevData = this.data;
-        this.data = (ConsList<Entry<K, V>>[]) new Object[2 * prevData.length];
+        this.data = newArray(2*prevData.length);
         this.size = 0;
 
         for (int ii = 0; ii < prevData.length; ++ii) {
@@ -33,26 +33,32 @@ public class HashMap<K, V> {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    Entry<K, V>[] newArray(int size) {
+        return (Entry<K, V>[]) Array.newInstance(Entry.class, size);
+    }
+
     public void put(K key, V val) {
         if (loadFactor() > 0.55) {
             grow();
         }
 
-        var ent = new Entry<K, V>(key, val);
+        Entry<K, V> ent = new Pair<K, V>(key, val);
         int code = key.hashCode();
 
         for (int ii = 0; ii < capacity(); ++ii) {
             int jj = modn(code + ii);
 
             if (this.data[jj].isEmpty()) {
-                this.data[ii] = ent;
+                System.out.println("inserted " + key + " at index " + jj);
+                this.data[jj] = ent;
                 this.size += 1;
                 return;
             }
 
             if (this.data[jj].isPair()) {
                 if (this.data[jj].key().equals(key)) {
-                    this.data[ii] = ent;
+                    this.data[jj] = ent;
                     return;
                 }
             }
@@ -104,7 +110,7 @@ public class HashMap<K, V> {
             var ent = this.data[jj];
 
             if (ent.isEmpty()) {
-                return null;
+                return;
             }
 
             if (ent.isPair()) {
@@ -116,7 +122,7 @@ public class HashMap<K, V> {
     }
 
     double loadFactor() {
-        return ((double) size) / ((double) capacity);
+        return ((double) size()) / ((double) capacity());
     }
 
     int capacity() {
@@ -142,21 +148,21 @@ interface Entry<K, V> {
 
 record Empty<K, V>() implements Entry<K, V> {
     @Override
-    public isEmpty() {
+    public boolean isEmpty() {
         return true;
     }
 }
 
 record Tomb<K, V>() implements Entry<K, V> {
     @Override
-    public isTomb() {
+    public boolean isTomb() {
         return true;
     }
 }
 
 record Pair<K, V>(K key, V val) implements Entry<K, V> {
     @Override
-    public isPair() {
+    public boolean isPair() {
         return true;
     }
 }
