@@ -2,6 +2,7 @@ package demo;
 
 public class App {
     public static void main(String[] args) {
+        /*
         var sounds = new HashMap<String, String>();
         sounds.put("cow", "moo");
         sounds.put("dog", "arf");
@@ -11,6 +12,7 @@ public class App {
         sounds.del("cow");
         System.out.println("size " + sounds.size());
         System.out.println("keys " + sounds.keys());
+        */
 
         var squares = new HashMap<Integer, Integer>();
         for (int ii = 0; ii < 100; ii += 5) {
