@@ -2,23 +2,17 @@ package demo;
 
 public class App {
     public static void main(String[] args) {
+        /*
         var sounds = new HashMap<String, String>();
         sounds.put("cow", "moo");
         sounds.put("dog", "arf");
         System.out.println("size " + sounds.size());
         System.out.println("keys " + sounds.keys());
         System.out.println("cow says " + sounds.get("cow"));
-
         sounds.del("cow");
         System.out.println("size " + sounds.size());
         System.out.println("keys " + sounds.keys());
-
-        var ns = new HashMap<Integer, String>();
-        for (int ii = 0; ii < 101; ++ii) {
-            int xx = ((ii + 1) * 4951) % 101;
-            ns.put(xx, "z"+xx);
-            System.out.println(ns.loadFactor());
-        }
+        */
 
         var squares = new HashMap<Integer, Integer>();
         for (int ii = 0; ii < 100; ii += 5) {
