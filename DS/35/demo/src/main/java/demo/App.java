@@ -27,6 +27,7 @@ public class App {
         while (true) {
             var orderText = con.readLine("order> ");
             var items = orderText.split("\\W");
+
             for (var item: items) {
                 con.printf("User picked: %s\n", item);
                 con.printf("That's: %s\n", menu.get(item));

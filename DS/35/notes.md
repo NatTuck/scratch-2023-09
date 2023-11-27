@@ -31,6 +31,7 @@ Ideas:
    - Finding an item takes O(n)
  - If we split by letter in our list, we can do
    constant time lookups.
- 
+ - Loading into a hash map will take O(n).
+   - Finding item in a hash map takes O(1).
 
 
