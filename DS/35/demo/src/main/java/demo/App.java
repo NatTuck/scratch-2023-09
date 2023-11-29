@@ -26,19 +26,31 @@ public class App {
 
         while (true) {
             var orderText = con.readLine("order> ");
-            var items = orderText.split("\\W");
+            var itemCodes = orderText.split("\\W");
 
-            for (var item: items) {
-                con.printf("User picked: %s\n", item);
-                con.printf("That's: %s\n", menu.get(item));
+            var receiptLines = new HashMap<String, ReceiptLine>();
+            for (var code : itemCodes) {
+                var item = menu.get(code);
+                if (receiptLines.containsKey(item.name())) {
+                    var line0 = receiptLines.get(item.name());
+                    var line1 = new ReceiptLine(item, line0.count() + 1);
+                    receiptLines.put(item.name(), line1);
+                }
+                else {
+                    var line = new ReceiptLine(item, 1);
+                    receiptLines.put(item.name(), line);
+                }
             }
+
+            var receipt = new Receipt(receiptLines.values().stream().toList());
+            con.printf(receipt.toString());
         }
     }
 
-    static long priceToCents(String price) {
+    static int priceToCents(String price) {
         var parts = price.split("\\.");
-        return 100 * Long.parseLong(parts[0]) +
-            Long.parseLong(parts[1]);
+        return 100 * Integer.parseInt(parts[0]) +
+            Integer.parseInt(parts[1]);
     }
 
     static List<String> readMenuLines() {
@@ -50,10 +62,91 @@ public class App {
     }
 }
 
-record MenuItem(String code, String name, long cents) {
+record MenuItem(String code, String name, int cents) {
     String price() {
+        return PH.toDollars(cents);
+    }
+}
+
+record Receipt(List<ReceiptLine> lines) {
+    private int subtotalCents() {
+        int cents = 0;
+        for (var line : lines) {
+            cents += line.item().cents() * line.count();
+        }
+        return cents;
+    }
+
+    String subtotal() {
+        return PH.toDollars(subtotalCents());
+    }
+
+    private int taxCents() {
+        return (int) Math.round(0.0625 * subtotalCents());
+    }
+
+    String tax() {
+        return PH.toDollars(taxCents());
+    }
+
+    private int totalCents() {
+        return subtotalCents() + taxCents();
+    }
+
+    String total() {
+        return PH.toDollars(totalCents());
+    }
+
+    @Override
+    public String toString() {
+        var yy = new StringBuilder();
+        yy.append(" == Your Receipt == \n");
+        for (var line : lines) {
+            yy.append(line.toString());
+        }
+        yy.append(String.format("subtotal:\t\t%s\n", subtotal()));
+        yy.append(String.format("tax:\t\t%s\n", tax()));
+        yy.append(String.format("total:\t\t%s\n", total()));
+        return yy.toString();
+    }
+}
+
+record ReceiptLine(MenuItem item, int count) {
+    int totalCents() {
+        return item.cents() * count;
+    }
+
+    String total() {
+        return PH.toDollars(totalCents());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s\t\t%s\t%d\t%s\n",
+                             item.name(), item.price(), count(), total());
+    }
+}
+
+class PH {
+    static String toDollars(int cents) {
         long dollars = cents / 100;
         long frac = Math.floorMod(cents, 100);
         return "$" + dollars + "." + frac;
     }
 }
+
+/*
+A receipt is several lines, each one has:
+    - A menu item
+    - Count ordered
+    - Calculate a total
+Additionally:
+    - Subtotal
+    - Tax
+    - Total
+*/
+
+
+
+    
+
